@@ -25,8 +25,12 @@ const CountryLookup = () => {
         const data2 = await res2.json();
 
         setCountry(data2.country_name);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log({
+          error,
+          devMessage:
+            "ERROR AT CountryLookup.js.  Func won't work if ad block is turned on",
+        });
       }
     };
     asyncFunc();

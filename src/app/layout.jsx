@@ -13,7 +13,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="relative min-h-[100vh]">
+      <body className="relative">
         {children}
         <Footer />
       </body>

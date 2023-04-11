@@ -2,12 +2,14 @@
 
 import { RxCross2 } from "react-icons/rx";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const SearchBox = () => {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const isWeb = pathname.includes("/web");
   const router = useRouter();
   const searchTerm = searchParams.get("searchTerm");
   const [input, setInput] = useState(searchTerm || "");
@@ -21,7 +23,7 @@ const SearchBox = () => {
   const onFormSubmitHandler = (e) => {
     e.preventDefault();
     if (!input.trim()) return;
-    router.push(`/search/web?searchTerm=${input}`);
+    router.push(`/search/${isWeb ? "web" : "image"}?searchTerm=${input}`);
   };
 
   return (

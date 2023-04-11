@@ -7,21 +7,40 @@ const getUrl = (searchTerm = "") => {
 
 const ImageSearchPage = async ({ searchParams }) => {
   const res = await fetch(getUrl(searchParams.searchTerm));
+  if (!res.ok) throw new Error();
   const data = await res.json();
-  const imageUrls = data.items
-    .map((item) => item.pagemap.cse_image)
-    .filter((item) => item !== undefined);
-  //console.log(imageUrls[0][0].src);
+  if (!data.items)
+    return (
+      <div className="flex flex-col items-center justify-center pt-10">
+        <h1 className="text-3xl mb-4">no results found</h1>
+        <p className="text-lg">Try searching for something else</p>
+        <Link className="text-blue-500" href="/">
+          Home
+        </Link>
+      </div>
+    );
+
+  const imageUrls = data.items.map((item) => {
+    if (item.pagemap && item.pagemap.cse_image) return item.pagemap.cse_image;
+  });
 
   return (
     <div className="flex">
       {imageUrls.map((image, i) => {
-        console.log(image[0].src);
         return (
           <div key={i}>
-            <Link href={""}>
-              <Image src={image[0].src} width={100} height={100} alt="" />
-            </Link>
+            {image && image[0].src.slice(0, 5) === "https" ? (
+              <Link href={data.items[i].link}>
+                <Image
+                  placeholder="blur"
+                  blurDataURL="/spinner.svg"
+                  src={image[0].src}
+                  width={100}
+                  height={100}
+                  alt="image not found"
+                />
+              </Link>
+            ) : null}
           </div>
         );
       })}
